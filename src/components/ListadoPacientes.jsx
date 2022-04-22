@@ -12,7 +12,7 @@ const ListadoPacientes = () => {
       <Paciente/>
       <Paciente/>
       <Paciente/>
-      <Paciente/>
+      <Paciente/> 
     </div>
   )
 }
