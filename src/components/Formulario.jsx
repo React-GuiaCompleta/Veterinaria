@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import Error from "./Error";
 
-const Formulario = () => {
+const Formulario = ({ setPacientes, pacientes }) => {
   const [nombre, setNombre] = useState('')
   const [propietario, setPropietario] = useState('')
   const [email, setEmail] = useState('')
@@ -13,14 +14,34 @@ const Formulario = () => {
     e.preventDefault()
     // Validacion del formulario 
     // includes: si incluye un campo vacio que el usuario no ha llenado
+    // nunca entrará acá si llena todos los campos osea si está en false
     if ([nombre, propietario, email, fecha, sintomas].includes('')) {
       console.log('Hay al menos un campo vacio')
       // Si das click en enviar estando los campos vacios cambia de false a true
       // el estado [error]
       setError(true)
-      return 
-    }
+      return
+    } // Si no, osea si llenas todos los campos vuelve a false, osea sin el mensaje
     setError(false)
+
+    // Objeto de paciente
+    const objetoPaciente = {
+      nombre,
+      propietario,
+      email,
+      fecha,
+      sintomas
+    }
+    // console.log(objetoPaciente)
+    // ... toma una copia de lo que hay en pacientes, 
+    setPacientes([...pacientes, objetoPaciente])
+
+    // Reiniciar el formulario
+    setNombre('')
+    setPropietario('')
+    setEmail('')
+    setFecha('')
+    setSintomas('')
   }
 
   return (
@@ -36,12 +57,11 @@ const Formulario = () => {
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg py-10 px-5 mb-10">
 
-        {/* Si error es true, imprima todos los... */}
-        {error &&
-          <div className="bg-red-500 text-white text-center p-3 uppercase font-bold mb-3 rounded-m">
-            <p>Todos los campos son obligatorios</p>
-          </div>
-        }
+        {/* Si error es true, imprima todos los...si es false nunca mostrará nada */}
+        {error && <Error>
+          <p> Todos los campos son obligatorios  </p>
+        </Error>}
+
         <div className="mb-5">
           <label htmlFor="mascota" className="block text-gray-700 uppercase font-bold">Nombre mascota</label>
           <input
