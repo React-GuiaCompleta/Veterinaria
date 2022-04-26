@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
-const Formulario = ({ setPacientes, pacientes }) => {
+const Formulario = ({ setPacientes, pacientes, paciente }) => {
   const [nombre, setNombre] = useState('')
   const [propietario, setPropietario] = useState('')
   const [email, setEmail] = useState('')
@@ -9,6 +9,22 @@ const Formulario = ({ setPacientes, pacientes }) => {
   const [sintomas, setSintomas] = useState('')
 
   const [error, setError] = useState(false)
+
+  useEffect(() => {
+    // Solo se ejecuta cuando...
+    // object.keys() comprueba si un objeto tiene algo
+    // y para editar debe haber informacion escrita anteriormente
+    // true or false
+    if (Object.keys(paciente).length > 0) {
+      // la info que hay en paciente pasala a cada estado del formulario 
+      setNombre(paciente.nombre)
+      setPropietario(paciente.propietario)
+      setEmail(paciente.email)
+      setFecha(paciente.fecha)
+      setSintomas(paciente.sintomas)
+    } 
+    // paciente haya cambiado, osea luego de hacer click en editar
+  }, [paciente])
 
   const generarId = () => {
     const random = Math.random().toString(36).substring(2)
@@ -42,7 +58,6 @@ const Formulario = ({ setPacientes, pacientes }) => {
     // console.log(objetoPaciente)
     // ... toma una copia de lo que hay en pacientes, 
     setPacientes([...pacientes, objetoPaciente])
-
     // Reiniciar el formulario
     setNombre('')
     setPropietario('')
