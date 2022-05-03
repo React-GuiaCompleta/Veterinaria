@@ -1,6 +1,13 @@
 // paciente es el objeto con la info que recorrió el map 
-const Paciente = ({ paciente, setPaciente }) => {
-  const { nombre, propietario, email, fecha, sintomas } = paciente
+const Paciente = ({ paciente, setPaciente, eliminarPaciente }) => {
+  const { nombre, propietario, email, fecha, sintomas, id } = paciente
+
+  const handleEliminar = () => {
+    const respuesta = confirm('¿Deseas eliminar este paciente?')
+    if (respuesta) {
+      eliminarPaciente(id)
+    }
+  }
   return (
     <div className="mx-5 my-10 bg-white shadow-md px-5 py-10 rounded-xl ">
       <p className="font-bold mb-3 text-gray-700 uppercase">
@@ -35,12 +42,14 @@ const Paciente = ({ paciente, setPaciente }) => {
           // paciente es el objeto via prop  
           // Si lo tenemos así se llena sin hacer click, con => espera a que el usuario dé el click para
           // ejecutar onClick={setPaciente(paciente)}
-          onClick={ ()=> setPaciente(paciente)}
+          onClick={() => setPaciente(paciente)}
         >Editar</button>
 
         <button
           type="button"
           className="py-2 px-10 bg-red-500 hover:bg-red-600 text-white uppercase rounded-lg"
+          // Entra en el ese porque paciente no cambia mira que no está el setPaciente
+          onClick={handleEliminar}
         >Eliminar</button>
       </div>
     </div>

@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
-const Formulario = ({ setPacientes, pacientes, paciente }) => {
+const Formulario = ({ setPacientes, pacientes, paciente, setPaciente }) => {
   const [nombre, setNombre] = useState('')
   const [propietario, setPropietario] = useState('')
   const [email, setEmail] = useState('')
   const [fecha, setFecha] = useState('')
   const [sintomas, setSintomas] = useState('')
-
   const [error, setError] = useState(false)
 
   useEffect(() => {
@@ -22,7 +21,7 @@ const Formulario = ({ setPacientes, pacientes, paciente }) => {
       setEmail(paciente.email)
       setFecha(paciente.fecha)
       setSintomas(paciente.sintomas)
-    } 
+    }
     // paciente haya cambiado, osea luego de hacer click en editar
   }, [paciente])
 
@@ -53,11 +52,40 @@ const Formulario = ({ setPacientes, pacientes, paciente }) => {
       email,
       fecha,
       sintomas,
-      id: generarId()
+      //al tener un paciente luego de dar click en editar manda toda la info del objeto al
+      //formulario y si le damos click en editar paciente crea el objeto y ademas le crea
+      // un nuevo id y necesitamos es el mismo id, no uno nuevo
+      // id: generarId()
+    }
+    // Si paciente existe, sino diga que nuevo registro, el primer click en
+    // agregar paciente sale editando porque no hay copia de paciente, al segundo
+    // click en editar paciente, ve que hay una copia en paciente osea si existe
+    // y muestra editando
+    if (paciente.id) {
+      //Editando
+      // al objeto que estamos cambiando con la nueva info le colocamos el id
+      // del objeto que vamos a editar que es inmutable
+      objetoPaciente.id = paciente.id
+      console.log(objetoPaciente);
+      // el id que tenemos en paciente.id lo ponemos en pacienteState.id
+      // pacientes tiene su id, si este id es igual a paciente.id que es el que estamos
+      // llenando editando muestre el objetoPaciente sino muestre lo que habia 
+      const pacientesActualizados = pacientes.map(pacienteState => pacienteState.id ===
+        // cuando recorre y ve un objeto que no es igual, debe dejarlo y mostrarlo tal cual
+        paciente.id ? objetoPaciente : pacienteState )
+
+        setPacientes(pacientesActualizados)
+        // Aqui se limpia
+        setPaciente({})
+
+    } else {
+      //Nuevo registro
+      objetoPaciente.id = generarId()
+      // ... toma una copia de lo que hay en pacientes, 
+      setPacientes([...pacientes, objetoPaciente])
     }
     // console.log(objetoPaciente)
-    // ... toma una copia de lo que hay en pacientes, 
-    setPacientes([...pacientes, objetoPaciente])
+
     // Reiniciar el formulario
     setNombre('')
     setPropietario('')
@@ -145,7 +173,8 @@ const Formulario = ({ setPacientes, pacientes, paciente }) => {
           type="submit"
           className="bg-indigo-600 w-full p-3 text-white uppercase font-bold
           hover:bg-indigo-700 cursor-pointer transition-all"
-          value="Agregar paciente"
+          // Si paciente.id existe
+          value={paciente.id ? 'Editar paciente' : 'Agregar paciente'}
         />
       </form>
     </div>
